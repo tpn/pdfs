@@ -1,0 +1,663 @@
+
+<!-- saved from url=(0113)https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml -->
+<html><!-- #BeginTemplate "/Templates/template.dwt" --><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<script type="text/javascript" src="./Inside IO Completion Ports_files/analytics.js"></script><style type="text/css"></style>
+<script type="text/javascript">archive_analytics.values.server_name="wwwb-app2.us.archive.org";archive_analytics.values.server_ms=250;</script>
+<link type="text/css" rel="stylesheet" href="./Inside IO Completion Ports_files/banner-styles.css">
+
+
+<!-- #BeginEditable "doctitle" --> 
+<title>Sysinternals Freeware - Information for Windows NT and Windows 2000 - Inside I/O Completion Ports</title>
+<!-- #EndEditable --> 
+<meta http-equiv="Content-Type" content="text/html;">
+<script language="JavaScript">
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+//-->
+</script>
+<link rel="stylesheet" href="./Inside IO Completion Ports_files/default.css" type="text/css">
+</head>
+<body topmargin="0" leftmargin="0" marginheight="0" marginwidth="0" bgcolor="#ffffff" background="./Inside IO Completion Ports_files/background.gif" onload="MM_preloadImages(&#39;../../images/topmenu_images/otop_menu_resources.gif&#39;,&#39;../../images/topmenu_images/otop_menu_aboutus.gif&#39;,&#39;../../images/topmenu_images/otop_menu_global.gif&#39;,&#39;../../images/sidemenu_images/oside_menu_98_utilities.gif&#39;,&#39;../../images/sidemenu_images/oside_menu_utilities.gif&#39;,&#39;../../images/sidemenu_images/oside_menu_source.gif&#39;,&#39;../../images/sidemenu_images/oside_menu_information.gif&#39;,&#39;../../images/sidemenu_images/oside_menu_98_source.gif&#39;,&#39;../../images/sidemenu_images/oside_menu_98_information.gif&#39;,&#39;../../images/topmenu_images/otop_menu_resources.gif&#39;,&#39;../../images/topmenu_images/otop_menu_sitemap.gif&#39;,&#39;../../images/topmenu_images/otop_menu_licensing.gif&#39;,&#39;../../images/topmenu_images/otop_menu_aboutus.gif&#39;,&#39;../../images/topmenu_images/otop_menu_global.gif&#39;)"><div id="wm-ipp" lang="en" style="display: block;">
+
+<div style="position:fixed;left:0;top:0;width:100%!important">
+<div id="wm-ipp-inside">
+   <table style="width:100%;"><tbody><tr>
+   <td id="wm-logo">
+       <a href="https://web.archive.org/web/" title="Wayback Machine home page"><img src="./Inside IO Completion Ports_files/wayback-toolbar-logo.png" alt="Wayback Machine" width="110" height="39" border="0"></a>
+   </td>
+   <td class="c">
+       <table style="margin:0 auto;"><tbody><tr>
+       <td class="u" colspan="2">
+       <form target="_top" method="get" action="https://web.archive.org/web/form-submit.jsp" name="wmtb" id="wmtb"><input type="text" name="url" id="wmtbURL" value="http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml" style="width:400px;" onfocus="this.focus();this.select();"><input type="hidden" name="type" value="replay"><input type="hidden" name="date" value="20101031075704"><input type="submit" value="Go"><span id="wm_tb_options" style="display:block;"></span></form>
+       </td>
+       <td class="n" rowspan="2">
+           <table><tbody>
+           <!-- NEXT/PREV MONTH NAV AND MONTH INDICATOR -->
+           <tr class="m">
+           	<td class="b" nowrap="nowrap">
+		
+		    <a href="https://web.archive.org/web/20100929175007/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml" title="29 Sep 2010">SEP</a>
+		
+		</td>
+		<td class="c" id="displayMonthEl" title="You are here: 7:57:04 Oct 31, 2010">OCT</td>
+		<td class="f" nowrap="nowrap">
+		
+		    <a href="https://web.archive.org/web/20101218172039/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml" title="18 Dec 2010"><strong>DEC</strong></a>
+		
+                </td>
+	    </tr>
+           <!-- NEXT/PREV CAPTURE NAV AND DAY OF MONTH INDICATOR -->
+           <tr class="d">
+               <td class="b" nowrap="nowrap">
+               
+                   <a href="https://web.archive.org/web/20100929175007/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml" title="17:50:07 Sep 29, 2010"><img src="./Inside IO Completion Ports_files/wm_tb_prv_on.png" alt="Previous capture" width="14" height="16" border="0"></a>
+               
+               </td>
+               <td class="c" id="displayDayEl" style="width:34px;font-size:24px;" title="You are here: 7:57:04 Oct 31, 2010">31</td>
+	       <td class="f" nowrap="nowrap">
+               
+		   <a href="https://web.archive.org/web/20101101112358/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml" title="11:23:58 Nov 1, 2010"><img src="./Inside IO Completion Ports_files/wm_tb_nxt_on.png" alt="Next capture" width="14" height="16" border="0"></a>
+	       
+	       </td>
+           </tr>
+           <!-- NEXT/PREV YEAR NAV AND YEAR INDICATOR -->
+           <tr class="y">
+	       <td class="b" nowrap="nowrap">
+               
+                   2009
+               
+               </td>
+               <td class="c" id="displayYearEl" title="You are here: 7:57:04 Oct 31, 2010">2010</td>
+	       <td class="f" nowrap="nowrap">
+               
+	           <a href="https://web.archive.org/web/20111109105607/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml" title="9 Nov 2011"><strong>2011</strong></a>
+	       
+	       </td>
+           </tr>
+           </tbody></table>
+       </td>
+       </tr>
+       <tr>
+       <td class="s">
+           <a class="t" href="https://web.archive.org/web/20101031075704*/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml" title="See a list of every capture for this URL">19 captures</a>
+           <div class="r" title="Timespan for captures of this URL">26 Jul 10 - 15 Aug 13</div>
+       </td>
+       <td class="k">
+       <a href="" id="wm-graph-anchor">
+       <div id="wm-ipp-sparkline" title="Explore captures for this URL">
+	 <img id="sparklineImgId" alt="sparklines" onmouseover="__wm.st(1)" onmouseout="__wm.st(0)" onmousemove="__wm.mv(event,this)" width="475" height="27" border="0" src="./Inside IO Completion Ports_files/graph.jsp">
+       <div class="yt" style="display: none; width: 25px; height: 27px;"></div><div class="mt" style="display: none; width: 2px; height: 27px;"></div></div>
+       </a>
+       </td>
+       </tr></tbody></table>
+   </td>
+   <td class="r">
+       <a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml#close" onclick="__wm.h();return false;" style="background-image:url(/static/images/toolbar/wm_tb_close.png);top:5px;" title="Close the toolbar">Close</a>
+       <a href="http://faq.web.archive.org/" style="background-image:url(/static/images/toolbar/wm_tb_help.png);bottom:5px;" title="Get some help using the Wayback Machine">Help</a>
+   </td>
+   </tr></tbody></table>
+</div>
+</div>
+</div>
+
+
+<!-- BEGIN WAYBACK TOOLBAR INSERT -->
+<script type="text/javascript" src="./Inside IO Completion Ports_files/disclaim-element.js"></script>
+<script type="text/javascript" src="./Inside IO Completion Ports_files/graph-calc.js"></script>
+<script type="text/javascript" src="./Inside IO Completion Ports_files/jquery.min.js"></script>
+<script type="text/javascript">//<![CDATA[
+var __wm = (function(){
+var wbPrefix = "/web/";
+var wbCurrentUrl = "http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml";
+
+var firstYear = 1996;
+var imgWidth = 475,imgHeight = 27;
+var yearImgWidth = 25,monthImgWidth = 2;
+var displayDay = "31";
+var displayMonth = "Oct";
+var displayYear = "2010";
+var prettyMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var $D=document,$=function(n){return document.getElementById(n)};
+var trackerVal,curYear = -1,curMonth = -1;
+var yearTracker,monthTracker;
+function showTrackers(val) {
+  if (val===trackerVal) return;
+  var $ipp=$("wm-ipp");
+  var $y=$("displayYearEl"),$m=$("displayMonthEl"),$d=$("displayDayEl");
+  if (val) {
+    $ipp.className="hi";
+  } else {
+    $ipp.className="";
+    $y.innerHTML=displayYear;$m.innerHTML=displayMonth;$d.innerHTML=displayDay;
+  }
+  yearTracker.style.display=val?"inline":"none";
+  monthTracker.style.display=val?"inline":"none";
+  trackerVal = val;
+}
+function getElementX2(obj) {
+  var $e=jQuery(obj);
+  return (typeof $e=="undefined"||typeof $e.offset=="undefined")?
+    getElementX(obj):Math.round($e.offset().left);
+}
+function trackMouseMove(event,element) {
+  var eventX = getEventX(event);
+  var elementX = getElementX2(element);
+  var xOff = Math.min(Math.max(0, eventX - elementX),imgWidth);
+  var monthOff = xOff % yearImgWidth;
+
+  var year = Math.floor(xOff / yearImgWidth);
+  var monthOfYear = Math.min(11,Math.floor(monthOff / monthImgWidth));
+  // 1 extra border pixel at the left edge of the year:
+  var month = (year * 12) + monthOfYear;
+  var day = monthOff % 2==1?15:1;
+  var dateString = zeroPad(year + firstYear) + zeroPad(monthOfYear+1,2) +
+    zeroPad(day,2) + "000000";
+
+  $("displayYearEl").innerHTML=year+firstYear;
+  $("displayMonthEl").innerHTML=prettyMonths[monthOfYear];
+  // looks too jarring when it changes..
+  //$("displayDayEl").innerHTML=zeroPad(day,2);
+  var url = wbPrefix + dateString + '/' +  wbCurrentUrl;
+  $("wm-graph-anchor").href=url;
+
+  if(curYear != year) {
+    var yrOff = year * yearImgWidth;
+    yearTracker.style.left = yrOff + "px";
+    curYear = year;
+  }
+  if(curMonth != month) {
+    var mtOff = year + (month * monthImgWidth) + 1;
+    monthTracker.style.left = mtOff + "px";
+    curMonth = month;
+  }
+}
+function hideToolbar() {
+  $("wm-ipp").style.display="none";
+}
+function bootstrap() {
+  var $spk=$("wm-ipp-sparkline");
+  yearTracker=$D.createElement('div');
+  yearTracker.className='yt';
+  with(yearTracker.style){
+    display='none';width=yearImgWidth+"px";height=imgHeight+"px";
+  }
+  monthTracker=$D.createElement('div');
+  monthTracker.className='mt';
+  with(monthTracker.style){
+    display='none';width=monthImgWidth+"px";height=imgHeight+"px";
+  }
+  $spk.appendChild(yearTracker);
+  $spk.appendChild(monthTracker);
+
+  var $ipp=$("wm-ipp");
+  $ipp&&disclaimElement($ipp);
+}
+return{st:showTrackers,mv:trackMouseMove,h:hideToolbar,bt:bootstrap};
+})();//]]>
+</script>
+<style type="text/css">
+body {
+  margin-top:0 !important;
+  padding-top:0 !important;
+  min-width:800px !important;
+}
+</style>
+
+<script type="text/javascript">__wm.bt();</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+<table width="770" border="0" cellspacing="0" cellpadding="0">
+  <tbody><tr> 
+    <td rowspan="4" width="226" valign="top"> 
+      <table width="50" border="0" cellspacing="0" cellpadding="0">
+        <tbody><tr> 
+          <td><a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/index.shtml"><img src="./Inside IO Completion Ports_files/logo.gif" width="227" height="67" border="0"></a></td>
+        </tr>
+        <tr valign="top"> 
+          <td height="479">
+<table width="176" border="0" cellspacing="0" cellpadding="0" height="279">
+  <tbody><tr valign="top"> 
+    <td height="291"><img src="./Inside IO Completion Ports_files/side_menu_top.gif" width="179" height="92" align="top"><br>
+      <a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/utilities.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image16&#39;,&#39;&#39;,&#39;../../images/sidemenu_images/oside_menu_utilities.gif&#39;,1)"><img name="Image16" border="0" src="./Inside IO Completion Ports_files/side_menu_utilities.gif" width="179" height="23" align="top"></a> 
+      <a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/source.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image11&#39;,&#39;&#39;,&#39;../../images/sidemenu_images/oside_menu_source.gif&#39;,1)"><img name="Image11" border="0" src="./Inside IO Completion Ports_files/side_menu_source.gif" width="179" height="22" align="top"></a> 
+      <a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/information.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image12&#39;,&#39;&#39;,&#39;../../images/sidemenu_images/oside_menu_information.gif&#39;,1)"><img name="Image12" border="0" src="./Inside IO Completion Ports_files/side_menu_information.gif" width="179" height="27" align="top"></a> 
+      <img src="./Inside IO Completion Ports_files/side_menu_middle.gif" width="179" height="50" align="top"><br>
+      <a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/win9x/98utilities.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image13&#39;,&#39;&#39;,&#39;../../images/sidemenu_images/oside_menu_98_utilities.gif&#39;,1)"><img name="Image13" border="0" src="./Inside IO Completion Ports_files/side_menu_98_utilities.gif" width="179" height="18" align="top"></a> 
+      <a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/win9x/98source.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image14&#39;,&#39;&#39;,&#39;../../images/sidemenu_images/oside_menu_98_source.gif&#39;,1)"><img name="Image14" border="0" src="./Inside IO Completion Ports_files/side_menu_98_source.gif" width="179" height="26" align="top"></a> 
+      <a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/win9x/98information.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image15&#39;,&#39;&#39;,&#39;../../images/sidemenu_images/oside_menu_98_information.gif&#39;,1)"><img name="Image15" border="0" src="./Inside IO Completion Ports_files/side_menu_98_information.gif" width="179" height="24" align="top"></a> 
+    </td>
+  </tr>
+</tbody></table>
+ </td>
+        </tr>
+      </tbody></table>
+    </td>
+    <td colspan="2" valign="top"> 
+      <table width="50" border="0" cellspacing="0" cellpadding="0">
+        <tbody><tr> 
+          <td><img src="./Inside IO Completion Ports_files/top_arch.gif" width="581" height="48" align="bottom"></td>
+        </tr>
+        <tr valign="top"> 
+          <td valign="top"><table width="581" border="0" cellspacing="0" cellpadding="0" height="48">
+  <tbody><tr valign="top"> 
+    <td><a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/othresources.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image7&#39;,&#39;&#39;,&#39;../../images/topmenu_images/otop_menu_resources.gif&#39;,1)"><img name="Image7" border="0" src="./Inside IO Completion Ports_files/top_menu_resources.gif" width="115" height="45" align="top"></a><a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/sitemap.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image8&#39;,&#39;&#39;,&#39;../../images/topmenu_images/otop_menu_sitemap.gif&#39;,1)"><img name="Image8" border="0" src="./Inside IO Completion Ports_files/top_menu_sitemap.gif" width="91" height="45" align="top"></a><a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/licensing.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image9&#39;,&#39;&#39;,&#39;../../images/topmenu_images/otop_menu_licensing.gif&#39;,1)"><img name="Image9" border="0" src="./Inside IO Completion Ports_files/top_menu_licensing.gif" width="75" height="45" align="top"></a><a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/aboutus.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image6&#39;,&#39;&#39;,&#39;../../images/topmenu_images/otop_menu_aboutus.gif&#39;,1)"><img src="./Inside IO Completion Ports_files/filler.gif" width="6" height="45" align="top" border="0"><img name="Image6" border="0" src="./Inside IO Completion Ports_files/top_menu_aboutus.gif" width="75" height="45" align="top"></a><a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/index.shtml" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage(&#39;Image192&#39;,&#39;&#39;,&#39;../../images/topmenu_images/otop_menu_home.gif&#39;,1)"><img name="Image192" border="0" src="./Inside IO Completion Ports_files/top_menu_home.gif" width="61" height="45" align="top"></a><img src="./Inside IO Completion Ports_files/top_menu_filler.gif" width="37" height="45" align="top"><img src="./Inside IO Completion Ports_files/top_menu_end.gif" width="121" height="45" align="top"></td>
+  </tr>
+</tbody></table>
+
+            <!-- #BeginEditable "Section%20title/logo" --><i><b><img src="./Inside IO Completion Ports_files/comport.gif" alt="Logo" width="445" height="29"><font face="arial" size="2"><a name="top"></a><br>
+            </font></b></i><b>Copyright © 1998&nbsp;<a href="mailto:mark@sysinternals.com">Mark 
+            Russinovich</a></b><!-- #EndEditable --></td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+  <tr> 
+    <td colspan="2" valign="top"> 
+      <table width="570" border="0" cellspacing="0" cellpadding="0">
+        <tbody><tr valign="top"> 
+          <td colspan="3" height="429"><!-- #BeginEditable "Body" -->
+            <table cellspacing="10" cellpadding="0" width="408">
+              <tbody><tr valign="top" align="left"> 
+                <td colspan="2" width="651" height="3148"> 
+                  <table width="580" border="0" cellspacing="0" cellpadding="0">
+                    <tbody><tr> 
+                      <td valign="top"> 
+                        <table width="549" border="0" cellspacing="0" cellpadding="0" dwcopytype="CopyTableRow">
+                          <tbody><tr> 
+                            <td colspan="3"><b></b></td>
+                          </tr>
+                          <tr> 
+                            <td colspan="3" valign="top"><span class="include">Last 
+                              updated July 30, 1998</span>
+                              <hr>
+                            </td>
+                          </tr>
+                          <tr> 
+                            <td colspan="3" height="40" valign="middle"><span class="sectionheader">Introduction</span> 
+                            </td>
+                          </tr>
+                          <tr> 
+                            <td valign="TOP" colspan="3" align="left"><font color="#000000">Writing 
+                              a high-performance server application requires implementing 
+                              an efficient threading model. Having either too 
+                              few or too many server threads to process client 
+                              requests can lead to performance problems. For example, 
+                              if a server creates a single thread to handle all 
+                              requests clients can become starved since the server 
+                              will be tied up processing one request at a time. 
+                              Of course, a single thread could simultaneously 
+                              process multiple requests, switching from one to 
+                              another as I/O operations are started, but this 
+                              architecture introduces significant complexity and 
+                              cannot take advantage of multiprocessor systems. 
+                              At the other extreme a server could create a big 
+                              pool of threads so that virtually every client request 
+                              is processed by a dedicated thread. This scenario 
+                              usually leads to thread-thrashing, where lots of 
+                              threads wake-up, perform some CPU processing, block 
+                              waiting for I/O and then after request procesing 
+                              is completed block again waiting for a new request. 
+                              If nothing else, context-switches are caused by 
+                              the scheduler having to divide processor time among 
+                              multiple active threads.</font><br>
+                              <br>
+                              <font color="#000000">The goal of a server is to 
+                              incur as few context switches as possible by having 
+                              its threads avoid unnecessary blocking, while at 
+                              the same time maximizing parallelism by using multiple 
+                              threads. The ideal is for there to be a thread actively 
+                              servicing a client request on every processor and 
+                              for those threads not to block if there are additional 
+                              requests waiting when they complete a request. For 
+                              this to work correctly however, there must be a 
+                              way for the application to activate another thread 
+                              when one processing a client request blocks on I/O 
+                              (like when it reads from a file as part of the processing). 
+                              </font><br>
+                              <br>
+                              <font color="#000000">Windows NT 3.5 introduced 
+                              a set of APIs that make this goal relatively easy 
+                              to achieve. The APIs are centered on an object called 
+                              a <i>completion port</i>. In this article I'm going 
+                              to provide an overview of how completion ports are 
+                              used and then go inside them to show you how Windows 
+                              NT implements them. </font> 
+                            </td>
+                          </tr>
+                          <tr> 
+                            <td colspan="3" height="40" valign="middle"><span class="sectionheader">Using I/O Completion Ports </span></td>
+                          </tr>
+                          <tr> 
+                            <td valign="TOP" colspan="3">Applications use completion 
+                              ports as the the focal point for the completion 
+                              of I/O associated with multiple file handles. Once 
+                              a file is associated with a completion port any 
+                              asynchronous I/O operations that complete on the 
+                              file result in a completion packet being queued 
+                              to the port. A thread can wait for any outstanding 
+                              I/Os to complete on multiple files simply by waiting 
+                              for a completion packet to be queued on the completion 
+                              port. The Win32 API provides similar functionality 
+                              with the <b>WaitForMultipleObjects</b> API, but 
+                              the advantage that completion ports have is that 
+                              concurrency, or the number of threads that an application 
+                              has actively servicing client requests, is controlled 
+                              with the aid of the system. <br>
+                              <br>
+                              When an application creates a completion port it 
+                              specifies a concurrency value. This value indicates 
+                              the maximum number of threads associated with the 
+                              port that should be running at any given point in 
+                              time. As I stated earlier, the ideal is to have 
+                              one thread active at any given point in time for 
+                              every processor in the system. The concurrency value 
+                              associated with a port is used by NT to control 
+                              how many threads an application has active - if 
+                              the number of active threads associated with a port 
+                              equals the concurrency value then a thread that 
+                              is waiting on the completion port will not be allowed 
+                              to run. Instead, it is expected that one of the 
+                              active threads will finish processing its current 
+                              request and check to see if there's another packet 
+                              waiting at the port - if there is then it simply 
+                              grabs it and goes off to process it. When this happens 
+                              there is no context switch, and the CPUs are utilized 
+                              to near their full capacity. <br>
+                              <br>
+                              Figure 1 below shows a high-level picture of completion 
+                              port operation. Incoming client requests cause completion 
+                              packets to be queued at the port. A number of threads, 
+                              up to the concurrency limit for the port, are allowed 
+                              by NT to process client requests. Any additional 
+                              threads associated with the port are blocked until 
+                              the number of active threads drops, as can happen 
+                              when an active thread blocks on file I/O. I'll discuss 
+                              this further a little later.<br><br>
+                              <img src="./Inside IO Completion Ports_files/comport1.gif" width="529" height="326"><br>
+                              A completion port is created with a call to the 
+                              Win32 API <b>CreateIoCompletionPort</b>: <br>
+                              <p><font color="#000000"><b>HANDLE CreateIoCompletionPort( 
+                                </b> <br>
+                                <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HANDLE</b> 
+                                <i>FileHandle</i>,<b><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HANDLE</b> 
+                                <i>ExistingCompletionPort</i>, <br>
+                                <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DWORD</b> 
+                                <i>CompletionKey ,</i><b><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DWORD</b> 
+                                <i>NumberOfConcurrentThreads</i><b><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</b> 
+                                </font></p>
+                              <br>
+                              To create the port an application passes in a NULL 
+                              for the <i>ExistingCompletionPort</i> parameter 
+                              and indicates the concurreny value with the <i>NumberOfConcurrentThreads</i> 
+                              parameter. If a <i>FileHandle</i> parameter is specified 
+                              then the file handle becomes associated with the 
+                              port. When an I/O request that has been issued on 
+                              the file handle completes a completion packet is 
+                              queued to the completion port. To retrieve a completion 
+                              packet and possibly block waiting for one to arrive 
+                              a thread calls the <b>GetQueuedCompletionStatus</b> 
+                              API: <br>
+                              <p><font color="#000000"><b>BOOL GetQueuedCompletionStatus(</b><br>
+                                <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HANDLE</b> 
+                                <i>CompletionPort</i>,<b><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LPDWORD</b> 
+                                <i>lpNumberOfBytesTransferred</i>, <br>
+                                <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LPDWORD</b> 
+                                <i>CompletionKey ,</i><b><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LPOVERLAPPED</b> 
+                                <i>*lpOverlapped,</i><b><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DWORD</b> 
+                                <i>dwMiillisecondTimeout</i><b><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);</b> 
+                                </font></p>
+                              <br>
+                              Threads that block on a completion port become associated 
+                              with the port and are woken in LIFO order so that 
+                              the thread that blocked most recently is the one 
+                              that is given the next packet. Threads that block 
+                              for long periods of time can have their stacks swapped 
+                              out to disk, so if there are more threads associated 
+                              with a port then there is work to process the in-memory 
+                              footprints of threads blocked the longest are minimized. 
+                              <br>
+                              <br>
+                              A server application will usually receive client 
+                              requests via network endpoints that are represented 
+                              as file handles. Examples include Winsock2 sockets 
+                              or named pipes. As the server creates its communications 
+                              endpoints it associates them with a completion port 
+                              and its threads wait for incoming requests by calling 
+                              <b>GetQueuedCompletionStatus</b> on the port. When 
+                              a thread is given a packet from the completion port 
+                              it will go off and start processing the request, 
+                              becoming an active thread. Many times a thread will 
+                              block during its processing, like when it needs 
+                              to read or write data to a file on disk, or when 
+                              it synchronizes with other threads. Windows NT is 
+                              clever enough to detect this and recognize that 
+                              the completion port has one less active thread. 
+                              Therefore, when a thread becomes inactive because 
+                              it blocks, a thread waiting on the completion port 
+                              will be woken if there is packet in the queue. <br>
+                              <br>
+                              Microsoft's guidelines are to set the concurrency 
+                              value roughly equal to the number of processors 
+                              in a system. Note that it is possible for the number 
+                              of active threads for a completion port to exceed 
+                              the concurrency limit. Consider a case where the 
+                              limit is specified as 1. A client request comes 
+                              in and a thread is dispatched to process the request, 
+                              becoming active. A second requests comes in but 
+                              a second thread waiting on the port is not allowed 
+                              to proceed because the concurrency limit has been 
+                              reached. Then the first thread blocks waiting for 
+                              a file I/O so it becomes inactive. The second thread 
+                              is then released and while it is still active the 
+                              first thread's file I/O is completes, making it 
+                              active again. At that point in time, and until one 
+                              of the threads blocks, the concurrency value is 
+                              2, which is higher than the limit of 1. Most of 
+                              the time the active count will remain at or just 
+                              above the concurrency limit.<br>
+                              <br>
+                              The completion port API also makes it possible for 
+                              a server application to queue privately defined 
+                              completion packets to a completion port using <b>PostQueuedCompletionStatus</b>. 
+                              Servers typically use this function to inform its 
+                              threads of external events such as the need to shut 
+                              down gracefully.</td>
+                          </tr>
+                          <tr> 
+                            <td height="40" colspan="3" valign="middle"><span class="sectionheader">Completion Port Internals</span> 
+                            </td>
+                          </tr>
+                          <tr> 
+                            <td colspan="3" valign="TOP">
+                              <p><font color="#000000">A call to the Win32 API 
+                                <b>CreateIoCompletionPort</b> with a NULL completion 
+                                port handle results in the execution of the native 
+                                API function <b>NtCreateIoCompletion</b>, which 
+                                invokes the corresponding kernel-mode system service 
+                                of the same name. Internally, completion ports 
+                                are based on an undocumented executive synchronization 
+                                object called a <i>Queue</i>. Thus, the system 
+                                service creates a completion port object and initializes 
+                                a queue object in the port's allocated memory 
+                                (a pointer to the port also points to the queue 
+                                object since the queue is at the start of the 
+                                port memory). A queue object has (coincidentally) 
+                                a concurrency value that is specified when a thread 
+                                initializes one, and in this case the value that 
+                                is used is the one that was passed to <b>CreateIoCompletionPort</b>. 
+                                <b>KeInitializeQueue</b> is the function that 
+                                <b>NtCreateIoCompletion</b> calls to initialize 
+                                a port's queue object.</font> <br>
+                                <br>
+                                <font color="#000000">When an application calls 
+                                <b>CreateIoCompletionPort</b> to associate a file 
+                                handle with a port the Win32 API invokes the native 
+                                function <b>NtSetInformationFile</b> with the 
+                                file handle as the primary parameter. The information 
+                                class that is set is <b>FileCompletionInformation</b> 
+                                and the completion port's handle and the <i>CompletionKey</i> 
+                                parameter from <b>CreateIoCompletionPort</b> are 
+                                the data values. <b>NtSetInformationFile</b> dereferences 
+                                the file handle to obtain the file object and 
+                                allocates a completion context data structure, 
+                                which is defined in NTDDK.H as: </font><br>
+                              </p>
+                              <p><font color="#000000"><b>typedef struct _IO_COMPLETION_CONTEXT 
+                                {</b><br>
+                                <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PVOID</b> 
+                                <i>Port</i>;<b> <br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ULONG</b> 
+                                <i>Key</i>; <br>
+                                <b>} IO_COMPLETION_CONTEXT, *PIO_COMPLETION_CONTEXT;</b></font></p>
+                              <br>
+                              <font color="#000000">Finally, <b>NtSetInformationFile</b> 
+                              sets the <i>CompletionContext</i> field in the file 
+                              object to point at the context structure. When an 
+                              I/O operation completes on a file object the internal 
+                              I/O manager function <b>IopCompleteRequest</b> executes 
+                              and, if the I/O was asynchronous, checks to see 
+                              if the <i>CompletionContext</i> field in the file 
+                              object is non-NULL. If its non-NULL the I/O Manager 
+                              allocates a completion packet and queues it to the 
+                              completion port by calling <b>KeInsertQueue</b> 
+                              with the port as the queue on which to insert the 
+                              packet (remember that the completion port object 
+                              and queue object are synonymous).</font><br>
+                              <br>
+                              <font color="#000000">When <b>GetQueuedCompletionStatus</b> 
+                              is invoked by a server thread, it calls the native 
+                              API function <b>NtRemoveIoCompletion</b>, which 
+                              transfers control to the <b>NtRemoveIoCompletion</b> 
+                              system service. After validating parameters and 
+                              translating the completion port handle to a pointer 
+                              to the port, <b>NtRemoveIoCompletion</b> calls <b>KeRemoveQueue</b>. 
+                              </font><br>
+                              <br>
+                              <font color="#000000">As you can see, <b>KeRemoveQueue</b> 
+                              and <b>KeInsertQueue</b> are the engine behind completion 
+                              ports and are the functions that determine whether 
+                              a thread waiting for an I/O completion packet should 
+                              be activated or not. Internally, a queue object 
+                              maintains a count of the current number of active 
+                              threads and the maximum active threads. If the current 
+                              number equals or exceeds the maximum when a thread 
+                              calls <b>KeRemoveQueue</b>, the thread will be put 
+                              (in LIFO order) onto a list of threads waiting for 
+                              a turn to process a completion packet. The list 
+                              of threads hangs off the queue object. A thread's 
+                              control block data structure has a pointer in it 
+                              that references the queue object of a queue that 
+                              it is associated with; if the pointer is NULL then 
+                              the thread is not associated with a queue. </font><br>
+                              <br>
+                              <font color="#000000">So how does NT keep track 
+                              of threads that become inactive because they block 
+                              on something other than the completion port? The 
+                              answer lies in the queue pointer in a thread's control 
+                              block. The scheduler routines that are executed 
+                              in response to a thread blocking (<b>KeWaitForSingleObject</b>, 
+                              <b>KeDelayExecutionThread</b>, etc.) check the thread's 
+                              queue pointer and if its not NULL they will call 
+                              <b>KiActivateWaiterQueue</b>, a queue-related function. 
+                              <b>KiActivateWaiterQueue</b> decrements the count 
+                              of active threads associated with the queue, and 
+                              if the result is less than the maximum and there 
+                              is at least one completion packet in the queue then 
+                              the thread at the front of the queue's thread list 
+                              is woken and given the oldest packet. Conversely, 
+                              whenever a thread that is associated with a queue 
+                              wakes up after blocking the scheduler executes the 
+                              function <b>KiUnwaitThread</b>, which increments 
+                              the queue's active count. </font><br>
+                              <br>
+                              Finally, the <b>PostQueuedCompletionStatus</b> Win32 
+                              API calls upon the native function <b>NtSetIoCompletion</b>. 
+                              As with the other native APIs in the completion 
+                              port group, this one invokes a system service bearing 
+                              the same name, which simply inserts that packet 
+                              onto the completion port's queue using <b>KeInsertQueue</b>.</td>
+                          </tr>
+                          <tr> 
+                            <td colspan="3" height="40" valign="middle"><span class="sectionheader">Not 
+                              Exported</span></td>
+                          </tr>
+                          <tr> 
+                            <td valign="TOP" colspan="3" align="left"> Windows 
+                              NT's completion port API provides an easy-to-use 
+                              and efficient way to maximize a server's performance 
+                              by minimizing context switches while obtaining high-degrees 
+                              of parallelism. The API is made possible with support 
+                              in the I/O Manager, Kernel, and system services. 
+                              While the Queue object is exported for use by device 
+                              drivers (it is undocumented but its interfaces are 
+                              relatively easy to figure out), the completion port 
+                              APIs are not. However, if the queue interfaces are 
+                              derived it is possible to mimick the completion 
+                              port interfaces by simply using the queue routines 
+                              and manually associating file objects with queues 
+                              by setting the <i>CompletionContext</i> entry.</td>
+                          </tr>
+						                            <tr> 
+                            <td colspan="3" height="40" valign="middle" align="center"> 
+                              <a href="https://web.archive.org/web/20101031075704/http://doc.sch130.nsc.ru/www.sysinternals.com/ntw2k/info/comport.shtml#top"><b>Back to Top</b></a> </td>
+                          </tr>
+
+                        </tbody></table>
+                      </td>
+                    </tr>
+                  </tbody></table>
+                </td>
+              </tr>
+            </tbody></table>
+            <!-- #EndEditable --></td>
+        </tr>
+      </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+
+<!-- #EndTemplate -->
+
+
+
+
+
+<!--
+     FILE ARCHIVED ON 7:57:04 Oct 31, 2010 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 12:01:09 Dec 31, 2014.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+</body></html>
