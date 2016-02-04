@@ -1,0 +1,1117 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>text figures</title><meta name="robots" content="noindex"></head>
+<body background="Windows%20Exceptions%20-%20MSDN%20Journal%20-%20Figures_files/msjwatermark.gif" bgcolor="ffffff" link="000080" vlink="800000">
+
+<!--TOOLBAR_START-->
+
+<!--TOOLBAR_EXEMPT-->
+
+<!--TOOLBAR_END-->
+
+
+
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig1">Figure 1</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">CONTEXT Structure</font></b>
+<p>
+</p><pre><font size="1">
+ typedef struct _CONTEXT
+ {
+     DWORD ContextFlags;
+     DWORD   Dr0;
+     DWORD   Dr1;
+     DWORD   Dr2;
+     DWORD   Dr3;
+     DWORD   Dr6;
+     DWORD   Dr7;
+     FLOATING_SAVE_AREA FloatSave;
+     DWORD   SegGs;
+     DWORD   SegFs;
+     DWORD   SegEs;
+     DWORD   SegDs;
+     DWORD   Edi;
+     DWORD   Esi;
+     DWORD   Ebx;
+     DWORD   Edx;
+     DWORD   Ecx;
+     DWORD   Eax;
+     DWORD   Ebp;
+     DWORD   Eip;
+     DWORD   SegCs;
+     DWORD   EFlags;
+     DWORD   Esp;
+     DWORD   SegSs;
+ } CONTEXT;
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig3">Figure 3</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">MYSEH.CPP</font></b>
+</p><p>
+</p><pre><font size="1">
+//==================================================
+// MYSEH - Matt Pietrek 1997
+// Microsoft Systems Journal, January 1997
+// FILE: MYSEH.CPP
+// To compile: CL MYSEH.CPP
+//==================================================
+#define WIN32_LEAN_AND_MEAN
+#include &lt;windows.h&gt;
+#include &lt;stdio.h&gt;
+
+DWORD  scratch;
+
+EXCEPTION_DISPOSITION
+__cdecl
+_except_handler(
+    struct _EXCEPTION_RECORD *ExceptionRecord,
+    void * EstablisherFrame,
+    struct _CONTEXT *ContextRecord,
+    void * DispatcherContext )
+{
+    unsigned i;
+
+    // Indicate that we made it to our exception handler
+    printf( "Hello from an exception handler\n" );
+
+    // Change EAX in the context record so that it points to someplace
+    // where we can successfully write
+    ContextRecord-&gt;Eax = (DWORD)&amp;scratch;
+
+    // Tell the OS to restart the faulting instruction
+    return ExceptionContinueExecution;
+}
+
+int main()
+{
+    DWORD handler = (DWORD)_except_handler;
+
+    __asm
+    {                           // Build EXCEPTION_REGISTRATION record:
+        push    handler         // Address of handler function
+        push    FS:[0]          // Address of previous handler
+        mov     FS:[0],ESP      // Install new EXECEPTION_REGISTRATION
+    }
+
+    __asm
+    {
+        mov     eax,0           // Zero out EAX
+        mov     [eax], 1        // Write to EAX to deliberately cause a fault
+    }
+
+    printf( "After writing!\n" );
+
+    __asm
+    {                           // Remove our EXECEPTION_REGISTRATION record
+        mov     eax,[ESP]       // Get pointer to previous record
+        mov     FS:[0], EAX     // Install previous record
+        add     esp, 8          // Clean our EXECEPTION_REGISTRATION off stack
+    }
+
+    return 0;
+}
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig5">Figure 5</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">MYSEH2.CPP</font></b>
+</p><p>
+</p><pre><font size="1">
+ //==================================================
+ // MYSEH2 - Matt Pietrek 1997
+ // Microsoft Systems Journal, January 1997
+ // FILE: MYSEH2.CPP
+ // To compile: CL MYSEH2.CPP
+ //==================================================
+ #define WIN32_LEAN_AND_MEAN
+ #include &lt;windows.h&gt;
+ #include &lt;stdio.h&gt;
+ 
+ EXCEPTION_DISPOSITION
+ __cdecl
+ _except_handler(
+     struct _EXCEPTION_RECORD *ExceptionRecord,
+     void * EstablisherFrame,
+     struct _CONTEXT *ContextRecord,
+     void * DispatcherContext )
+ {
+     printf( "Home Grown handler: Exception Code: %08X Exception Flags %X",
+              ExceptionRecord-&gt;ExceptionCode, ExceptionRecord-&gt;ExceptionFlags );
+ 
+     if ( ExceptionRecord-&gt;ExceptionFlags &amp; 1 )
+         printf( " EH_NONCONTINUABLE" );
+     if ( ExceptionRecord-&gt;ExceptionFlags &amp; 2 )
+         printf( " EH_UNWINDING" );
+     if ( ExceptionRecord-&gt;ExceptionFlags &amp; 4 )
+         printf( " EH_EXIT_UNWIND" );
+     if ( ExceptionRecord-&gt;ExceptionFlags &amp; 8 )
+         printf( " EH_STACK_INVALID" );
+     if ( ExceptionRecord-&gt;ExceptionFlags &amp; 0x10 )
+         printf( " EH_NESTED_CALL" );
+ 
+     printf( "\n" );
+ 
+     // Punt... We don't want to handle this... Let somebody else handle it
+     return ExceptionContinueSearch;
+ }
+ 
+ void HomeGrownFrame( void )
+ {
+     DWORD handler = (DWORD)_except_handler;
+ 
+     __asm
+     {                           // Build EXCEPTION_REGISTRATION record:
+         push    handler         // Address of handler function
+         push    FS:[0]          // Address of previous handler
+         mov     FS:[0],ESP      // Install new EXECEPTION_REGISTRATION
+     }
+ 
+     *(PDWORD)0 = 0;             // Write to address 0 to cause a fault
+ 
+     printf( "I should never get here!\n" );
+ 
+     __asm
+     {                           // Remove our EXECEPTION_REGISTRATION record
+         mov     eax,[ESP]       // Get pointer to previous record
+         mov     FS:[0], EAX     // Install previous record
+         add     esp, 8          // Clean our EXECEPTION_REGISTRATION off stack
+     }
+ }
+ 
+ int main()
+ {
+     _try
+     {
+         HomeGrownFrame(); 
+     }
+     _except( EXCEPTION_EXECUTE_HANDLER )
+     {
+         printf( "Caught the exception in main()\n" );
+     }
+ 
+     return 0;
+}
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig7">Figure 7</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">BaseProcessStart Pseudocode</font></b>
+</p><p>
+</p><pre><font size="1">
+ BaseProcessStart( PVOID lpfnEntryPoint )
+ {
+     DWORD retValue
+     DWORD currentESP;
+     DWORD exceptionCode;
+ 
+     currentESP = ESP;
+ 
+     _try
+     {
+         NtSetInformationThread( GetCurrentThread(),
+                                 ThreadQuerySetWin32StartAddress,
+                                 &amp;lpfnEntryPoint, sizeof(lpfnEntryPoint) );
+ 
+         retValue = lpfnEntryPoint();
+ 
+         ExitThread( retValue );
+     }
+     _except(// filter-expression code
+             exceptionCode = GetExceptionInformation(),
+             UnhandledExceptionFilter( GetExceptionInformation() ) )
+     {
+         ESP = currentESP;
+ 
+         if ( !_BaseRunningInServerProcess )         // Regular process
+             ExitProcess( exceptionCode );
+         else                                        // Service
+             ExitThread( exceptionCode );
+     }
+ }
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig9">Figure 9</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">__except_handler3 Pseudocode</font></b>
+</p><p>
+</p><pre><font size="1">
+ int __except_handler3(
+     struct _EXCEPTION_RECORD * pExceptionRecord,
+     struct EXCEPTION_REGISTRATION * pRegistrationFrame,
+     struct _CONTEXT *pContextRecord,
+     void * pDispatcherContext )
+ {
+     LONG filterFuncRet
+     LONG trylevel
+     EXCEPTION_POINTERS exceptPtrs
+     PSCOPETABLE pScopeTable
+ 
+     CLD     // Clear the direction flag (make no assumptions!)
+ 
+     // if neither the EXCEPTION_UNWINDING nor EXCEPTION_EXIT_UNWIND bit
+     // is set...  This is true the first time through the handler (the
+     // non-unwinding case)
+ 
+     if ( ! (pExceptionRecord-&gt;ExceptionFlags
+             &amp; (EXCEPTION_UNWINDING | EXCEPTION_EXIT_UNWIND)) )
+     {
+         // Build the EXCEPTION_POINTERS structure on the stack
+         exceptPtrs.ExceptionRecord = pExceptionRecord;
+         exceptPtrs.ContextRecord = pContextRecord;
+ 
+         // Put the pointer to the EXCEPTION_POINTERS 4 bytes below the
+         // establisher frame.  See ASM code for GetExceptionInformation
+         *(PDWORD)((PBYTE)pRegistrationFrame - 4) = &amp;exceptPtrs;
+ 
+         // Get initial "trylevel" value
+         trylevel = pRegistrationFrame-&gt;trylevel 
+ 
+         // Get a pointer to the scopetable array
+         scopeTable = pRegistrationFrame-&gt;scopetable;
+ 
+ search_for_handler: 
+ 
+         if ( pRegistrationFrame-&gt;trylevel != TRYLEVEL_NONE )
+         {
+             if ( pRegistrationFrame-&gt;scopetable[trylevel].lpfnFilter )
+             {
+                 PUSH EBP                        // Save this frame EBP
+ 
+                 // !!!Very Important!!!  Switch to original EBP.  This is
+                 // what allows all locals in the frame to have the same
+                 // value as before the exception occurred.
+                 EBP = &amp;pRegistrationFrame-&gt;_ebp 
+ 
+                 // Call the filter function
+                 filterFuncRet = scopetable[trylevel].lpfnFilter();
+ 
+                 POP EBP                         // Restore handler frame EBP
+ 
+                 if ( filterFuncRet != EXCEPTION_CONTINUE_SEARCH )
+                 {
+                     if ( filterFuncRet &lt; 0 ) // EXCEPTION_CONTINUE_EXECUTION
+                         return ExceptionContinueExecution;
+ 
+                     // If we get here, EXCEPTION_EXECUTE_HANDLER was specified
+                     scopetable == pRegistrationFrame-&gt;scopetable
+ 
+                     // Does the actual OS cleanup of registration frames
+                     // Causes this function to recurse
+                     __global_unwind2( pRegistrationFrame );
+ 
+                     // Once we get here, everything is all cleaned up, except
+                     // for the last frame, where we'll continue execution
+                     EBP = &amp;pRegistrationFrame-&gt;_ebp
+                     
+                     __local_unwind2( pRegistrationFrame, trylevel );
+ 
+                     // NLG == "non-local-goto" (setjmp/longjmp stuff)
+                     __NLG_Notify( 1 );  // EAX == scopetable-&gt;lpfnHandler
+ 
+                     // Set the current trylevel to whatever SCOPETABLE entry
+                     // was being used when a handler was found
+                     pRegistrationFrame-&gt;trylevel = scopetable-&gt;previousTryLevel;
+ 
+                     // Call the _except {} block.  Never returns.
+                     pRegistrationFrame-&gt;scopetable[trylevel].lpfnHandler();
+                 }
+             }
+ 
+             scopeTable = pRegistrationFrame-&gt;scopetable;
+             trylevel = scopeTable-&gt;previousTryLevel
+ 
+             goto search_for_handler;
+         }
+         else    // trylevel == TRYLEVEL_NONE
+         {
+             retvalue == DISPOSITION_CONTINUE_SEARCH;
+         }
+     }
+     else    // EXCEPTION_UNWINDING or EXCEPTION_EXIT_UNWIND flags are set
+     {
+         PUSH EBP    // Save EBP
+         EBP = pRegistrationFrame-&gt;_ebp  // Set EBP for __local_unwind2
+ 
+         __local_unwind2( pRegistrationFrame, TRYLEVEL_NONE )
+ 
+         POP EBP     // Restore EBP
+ 
+         retvalue == DISPOSITION_CONTINUE_SEARCH;
+     }
+ }
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig10">Figure 10</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">ShowSEHFrames.CPP</font></b>
+</p><p>
+</p><pre><font size="1">
+ //==================================================
+ // ShowSEHFrames - Matt Pietrek 1997
+ // Microsoft Systems Journal, February 1997
+ // FILE: ShowSEHFrames.CPP
+ // To compile: CL ShowSehFrames.CPP
+ //==================================================
+ #define WIN32_LEAN_AND_MEAN
+ #include &lt;windows.h&gt;
+ #include &lt;stdio.h&gt;
+ #pragma hdrstop
+ 
+ //----------------------------------------------------------------------------
+ // !!! WARNING !!!  This program only works with Visual C++, as the data
+ // structures being shown are specific to Visual C++.
+ //----------------------------------------------------------------------------
+ 
+ #ifndef _MSC_VER
+ #error Visual C++ Required (Visual C++ specific information is displayed)
+ #endif
+ 
+ //----------------------------------------------------------------------------
+ // Structure Definitions
+ //----------------------------------------------------------------------------
+ 
+ // The basic, OS defined exception frame
+ 
+ struct EXCEPTION_REGISTRATION
+ {
+     EXCEPTION_REGISTRATION* prev;
+     FARPROC                 handler;
+ };
+ 
+ 
+ // Data structure(s) pointed to by Visual C++ extended exception frame
+ 
+ struct scopetable_entry
+ {
+     DWORD       previousTryLevel;
+     FARPROC     lpfnFilter;
+     FARPROC     lpfnHandler;
+ };
+ 
+ // The extended exception frame used by Visual C++
+ 
+ struct VC_EXCEPTION_REGISTRATION : EXCEPTION_REGISTRATION
+ {
+     scopetable_entry *  scopetable;
+     int                 trylevel;
+     int                 _ebp;
+ };
+ 
+ //----------------------------------------------------------------------------
+ // Prototypes
+ //----------------------------------------------------------------------------
+ 
+ // __except_handler3 is a Visual C++ RTL function.  We want to refer to
+ // it in order to print it's address.  However, we need to prototype it since
+ // it doesn't appear in any header file.
+ 
+ extern "C" int _except_handler3(PEXCEPTION_RECORD, EXCEPTION_REGISTRATION *,
+                                 PCONTEXT, PEXCEPTION_RECORD);
+ 
+ 
+ //----------------------------------------------------------------------------
+ // Code
+ //----------------------------------------------------------------------------
+ 
+ //
+ // Display the information in one exception frame, along with its scopetable
+ //
+ 
+ void ShowSEHFrame( VC_EXCEPTION_REGISTRATION * pVCExcRec )
+ {
+     printf( "Frame: %08X  Handler: %08X  Prev: %08X  Scopetable: %08X\n",
+             pVCExcRec, pVCExcRec-&gt;handler, pVCExcRec-&gt;prev,
+             pVCExcRec-&gt;scopetable );
+ 
+     scopetable_entry * pScopeTableEntry = pVCExcRec-&gt;scopetable;
+ 
+     for ( unsigned i = 0; i &lt;= pVCExcRec-&gt;trylevel; i++ )
+     {
+         printf( "    scopetable[%u] PrevTryLevel: %08X  "
+                 "filter: %08X  __except: %08X\n", i,
+                 pScopeTableEntry-&gt;previousTryLevel,
+                 pScopeTableEntry-&gt;lpfnFilter,
+                 pScopeTableEntry-&gt;lpfnHandler );
+ 
+         pScopeTableEntry++;
+     }
+ 
+     printf( "\n" );
+ }   
+ 
+ //
+ // Walk the linked list of frames, displaying each in turn
+ //
+ 
+ void WalkSEHFrames( void )
+ {
+     VC_EXCEPTION_REGISTRATION * pVCExcRec;
+ 
+     // Print out the location of the __except_handler3 function
+     printf( "_except_handler3 is at address: %08X\n", _except_handler3 );
+     printf( "\n" );
+ 
+     // Get a pointer to the head of the chain at FS:[0]
+     __asm   mov eax, FS:[0]
+     __asm   mov [pVCExcRec], EAX
+ 
+     // Walk the linked list of frames.  0xFFFFFFFF indicates the end of list
+     while (  0xFFFFFFFF != (unsigned)pVCExcRec )
+     {
+         ShowSEHFrame( pVCExcRec );
+         pVCExcRec = (VC_EXCEPTION_REGISTRATION *)(pVCExcRec-&gt;prev);
+     }       
+ }
+ 
+ void Function1( void )
+ {
+     // Set up 3 nested _try levels (thereby forcing 3 scopetable entries)
+     _try
+     {
+         _try
+         {
+             _try
+             {
+                 WalkSEHFrames();    // Now show all the exception frames
+             }
+             _except( EXCEPTION_CONTINUE_SEARCH )
+             {
+             }
+         }
+         _except( EXCEPTION_CONTINUE_SEARCH )
+         {
+         }
+     }
+     _except( EXCEPTION_CONTINUE_SEARCH )
+     {
+     }
+ }
+ 
+ int main()
+ {
+     int i;
+ 
+     // Use two (non-nested) _try blocks.  This causes two scopetable entries
+     // to be generated for the function.
+ 
+     _try
+     {
+         i = 0x1234;     // Do nothing in particular
+     }
+     _except( EXCEPTION_CONTINUE_SEARCH )
+     {
+         i = 0x4321;     // Do nothing (in reverse)
+     }
+ 
+     _try
+     {
+         Function1();    // Call a function that sets up more exception frames
+     }
+     _except( EXCEPTION_EXECUTE_HANDLER )
+     {
+         // Should never get here, since we aren't expecting an exception
+         printf( "Caught Exception in main\n" );
+     }
+ 
+     return 0;
+ }
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig12">Figure 12</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">RtlUnwind Pseudocode</font></b>
+</p><p>
+</p><pre><font size="1">
+ void _RtlUnwind( PEXCEPTION_REGISTRATION pRegistrationFrame,
+                  PVOID returnAddr,  // Not used! (At least on i386)
+                  PEXCEPTION_RECORD pExcptRec,
+                  DWORD _eax_value ) 
+ {
+     DWORD   stackUserBase;
+     DWORD   stackUserTop;
+     PEXCEPTION_RECORD pExcptRec;
+     EXCEPTION_RECORD  exceptRec;    
+     CONTEXT context;
+ 
+     // Get stack boundaries from FS:[4] and FS:[8]
+     RtlpGetStackLimits( &amp;stackUserBase, &amp;stackUserTop );
+ 
+     if ( 0 == pExcptRec )   // The normal case
+     {
+         pExcptRec = &amp;excptRec;
+ 
+         pExcptRec-&gt;ExceptionFlags = 0;
+         pExcptRec-&gt;ExceptionCode = STATUS_UNWIND;
+         pExcptRec-&gt;ExceptionRecord = 0;
+         // Get return address off the stack
+         pExcptRec-&gt;ExceptionAddress = RtlpGetReturnAddress();
+         pExcptRec-&gt;ExceptionInformation[0] = 0;
+     }
+ 
+     if ( pRegistrationFrame )
+         pExcptRec-&gt;ExceptionFlags |= EXCEPTION_UNWINDING;
+     else
+         pExcptRec-&gt;ExceptionFlags|=(EXCEPTION_UNWINDING|EXCEPTION_EXIT_UNWIND);
+ 
+     context.ContextFlags =
+         (CONTEXT_i486 | CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_SEGMENTS);
+ 
+     RtlpCaptureContext( &amp;context );
+ 
+     context.Esp += 0x10;
+     context.Eax = _eax_value;
+ 
+     PEXCEPTION_REGISTRATION pExcptRegHead;
+ 
+     pExcptRegHead = RtlpGetRegistrationHead();  // Retrieve FS:[0]
+ 
+     // Begin traversing the list of EXCEPTION_REGISTRATION
+     while ( -1 != pExcptRegHead )
+     {
+         EXCEPTION_RECORD excptRec2;
+ 
+         if ( pExcptRegHead == pRegistrationFrame )
+         {
+             _NtContinue( &amp;context, 0 );
+         }
+         else
+         {
+             // If there's an exception frame, but it's lower on the stack
+             // then the head of the exception list, something's wrong!
+             if ( pRegistrationFrame &amp;&amp; (pRegistrationFrame &lt;= pExcptRegHead) )
+             {
+                 // Generate an exception to bail out
+                 excptRec2.ExceptionRecord = pExcptRec;
+                 excptRec2.NumberParameters = 0;
+                 excptRec2.ExceptionCode = STATUS_INVALID_UNWIND_TARGET;
+                 excptRec2.ExceptionFlags = EXCEPTION_NONCONTINUABLE;    
+ 
+                 _RtlRaiseException( &amp;exceptRec2 );
+             }
+         }
+ 
+         PVOID pStack = pExcptRegHead + 8; // 8==sizeof(EXCEPTION_REGISTRATION)
+ 
+         if (    (stackUserBase &lt;= pExcptRegHead )   // Make sure that
+             &amp;&amp;  (stackUserTop &gt;= pStack )           // pExcptRegHead is in
+             &amp;&amp;  (0 == (pExcptRegHead &amp; 3)) )        // range, and a multiple
+         {                                           // of 4 (i.e., sane)
+             DWORD pNewRegistHead;
+             DWORD retValue;
+ 
+             retValue = RtlpExecutehandlerForUnwind(
+                             pExcptRec, pExcptRegHead, &amp;context,
+                             &amp;pNewRegistHead, pExceptRegHead-&gt;handler );
+ 
+             if ( retValue != DISPOSITION_CONTINUE_SEARCH )
+             {
+                 if ( retValue != DISPOSITION_COLLIDED_UNWIND )
+                 {
+                     excptRec2.ExceptionRecord = pExcptRec;
+              excptRec2.NumberParameters = 0;
+                     excptRec2.ExceptionCode = STATUS_INVALID_DISPOSITION;
+                     excptRec2.ExceptionFlags = EXCEPTION_NONCONTINUABLE;    
+ 
+                     RtlRaiseException( &amp;excptRec2 );
+                 }
+                 else
+                     pExcptRegHead = pNewRegistHead;
+             }
+ 
+             PEXCEPTION_REGISTRATION pCurrExcptReg = pExcptRegHead;
+             pExcptRegHead = pExcptRegHead-&gt;prev;
+ 
+             RtlpUnlinkHandler( pCurrExcptReg );
+         }
+         else    // The stack looks goofy!  Raise an exception to bail out
+         {
+             excptRec2.ExceptionRecord = pExcptRec;
+             excptRec2.NumberParameters = 0;
+             excptRec2.ExceptionCode = STATUS_BAD_STACK;
+             excptRec2.ExceptionFlags = EXCEPTION_NONCONTINUABLE;    
+ 
+             RtlRaiseException( &amp;excptRec2 );
+         }
+     }
+ 
+     // If we get here, we reached the end of the EXCEPTION_REGISTRATION list.
+     // This shouldn't happen normally.
+ 
+     if ( -1 == pRegistrationFrame )
+         NtContinue( &amp;context, 0 );
+     else
+         NtRaiseException( pExcptRec, &amp;context, 0 );
+ 
+ }
+ 
+ PEXCEPTION_REGISTRATION
+ RtlpGetRegistrationHead( void )
+ {
+     return FS:[0];
+ }
+ 
+ _RtlpUnlinkHandler( PEXCEPTION_REGISTRATION pRegistrationFrame )
+ {
+     FS:[0] = pRegistrationFrame-&gt;prev;
+ }
+ 
+ void _RtlpCaptureContext( CONTEXT * pContext )
+ {
+     pContext-&gt;Eax = 0;
+     pContext-&gt;Ecx = 0;
+     pContext-&gt;Edx = 0;
+     pContext-&gt;Ebx = 0;
+     pContext-&gt;Esi = 0;
+     pContext-&gt;Edi = 0;
+     pContext-&gt;SegCs = CS;
+     pContext-&gt;SegDs = DS;
+     pContext-&gt;SegEs = ES;
+     pContext-&gt;SegFs = FS;
+     pContext-&gt;SegGs = GS;
+     pContext-&gt;SegSs = SS;
+     pContext-&gt;EFlags = flags; // __asm{ PUSHFD / pop [xxxxxxxx] }
+     pContext-&gt;Eip = return address of the caller of the caller of this function
+     pContext-&gt;Ebp = EBP of the caller of the caller of this function 
+     pContext-&gt;Esp = Context.Ebp + 8
+ }
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig13">Figure 13</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">UnHandledExceptionFilter Pseudocode</font></b>
+</p><p>
+</p><pre><font size="1">
+ UnhandledExceptionFilter( STRUCT _EXCEPTION_POINTERS *pExceptionPtrs )
+ {
+     PEXCEPTION_RECORD pExcptRec;
+     DWORD currentESP;
+     DWORD retValue;
+     DWORD DEBUGPORT;
+     DWORD   dwTemp2;
+     DWORD   dwUseJustInTimeDebugger;
+     CHAR    szDbgCmdFmt[256];   // Template string retrieved from AeDebug key
+     CHAR    szDbgCmdLine[256];  // Actual debugger string after filling in
+     STARTUPINFO startupinfo;
+     PROCESS_INFORMATION pi;
+     HARDERR_STRUCT  harderr;    // ???
+     BOOL fAeDebugAuto;
+     TIB * pTib;                 // Thread information block
+ 
+     pExcptRec = pExceptionPtrs-&gt;ExceptionRecord;
+ 
+     if (   (pExcptRec-&gt;ExceptionCode == EXCEPTION_ACCESS_VIOLATION)
+         &amp;&amp; (pExcptRec-&gt;ExceptionInformation[0]) )
+     {
+         retValue = 
+             _BasepCheckForReadOnlyResource(pExcptRec-&gt;ExceptionInformation[1]);
+ 
+         if ( EXCEPTION_CONTINUE_EXECUTION == retValue )
+             return EXCEPTION_CONTINUE_EXECUTION;
+      }
+ 
+     // See if this process is being run under a debugger...
+     retValue = NtQueryInformationProcess(GetCurrentProcess(), ProcessDebugPort,
+                                          &amp;debugPort, sizeof(debugPort), 0 );
+ 
+     if ( (retValue &gt;= 0) &amp;&amp; debugPort )     // Let debugger have it
+         return EXCEPTION_CONTINUE_SEARCH;
+ 
+     // Did the user call SetUnhandledExceptionFilter?  If so, call their
+     // installed proc now.
+ 
+     if ( _BasepCurrentTopLevelFilter )
+     {
+         retValue = _BasepCurrentTopLevelFilter( pExceptionPtrs );
+ 
+         if ( EXCEPTION_EXECUTE_HANDLER == retValue )
+             return EXCEPTION_EXECUTE_HANDLER;
+         
+         if ( EXCEPTION_CONTINUE_EXECUTION == retValue )
+             return EXCEPTION_CONTINUE_EXECUTION;
+ 
+         // Only EXCEPTION_CONTINUE_SEARCH goes on from here
+     }
+ 
+     // Has SetErrorMode(SEM_NOGPFAULTERRORBOX) been called?
+     if ( 0 == (GetErrorMode() &amp; SEM_NOGPFAULTERRORBOX) )
+     {
+         harderr.elem0 = pExcptRec-&gt;ExceptionCode;
+         harderr.elem1 = pExcptRec-&gt;ExceptionAddress;
+ 
+         if ( EXCEPTION_IN_PAGE_ERROR == pExcptRec-&gt;ExceptionCode )
+             harderr.elem2 = pExcptRec-&gt;ExceptionInformation[2];
+         else
+             harderr.elem2 = pExcptRec-&gt;ExceptionInformation[0];
+ 
+         dwTemp2 = 1;
+         fAeDebugAuto = FALSE;
+ 
+         harderr.elem3 = pExcptRec-&gt;ExceptionInformation[1];
+ 
+         pTib = FS:[18h];
+ 
+         DWORD someVal = pTib-&gt;pProcess-&gt;0xC;
+ 
+         if ( pTib-&gt;threadID != someVal )
+         {
+             __try
+ 			{
+                 char szDbgCmdFmt[256]
+                 retValue = _GetProfileStringA( "AeDebug", "Debugger", 0,
+                                      szDbgCmdFmt, sizeof(szDbgCmdFmt)-1 );
+ 
+                 if ( retValue )
+                     dwTemp2 = 2;
+ 
+                 char szAuto[8]
+ 
+                 retValue = GetProfileStringA(   "AeDebug", "Auto", "0",
+                                                 szAuto, sizeof(szAuto)-1 );
+                 if ( retValue )
+                     if ( 0 == strcmp( szAuto, "1" ) )
+                         if ( 2 == dwTemp2 )
+                             fAeDebugAuto = TRUE;
+             }
+             __except( EXCEPTION_EXECUTE_HANDLER )
+             {
+                 ESP = currentESP;
+                 dwTemp2 = 1
+                 fAeDebugAuto = FALSE;
+             }
+         }
+ 
+         if ( FALSE == fAeDebugAuto )
+         {
+             retValue =  NtRaiseHardError(
+                                 STATUS_UNHANDLED_EXCEPTION | 0x10000000,
+                                 4, 0, &amp;harderr,
+                                 _BasepAlreadyHadHardError ? 1 : dwTemp2,
+                                 &amp;dwUseJustInTimeDebugger );
+         }
+         else
+         {
+             dwUseJustInTimeDebugger = 3;
+             retValue = 0;
+         }
+ 
+         if (    retValue &gt;= 0 
+             &amp;&amp;  ( dwUseJustInTimeDebugger == 3)
+             &amp;&amp;  ( !_BasepAlreadyHadHardError )
+             &amp;&amp;  ( !_BaseRunningInServerProcess ) )
+         {
+             _BasepAlreadyHadHardError = 1;
+ 
+             SECURITY_ATTRIBUTES secAttr = { sizeof(secAttr), 0, TRUE };
+ 
+             HANDLE hEvent = CreateEventA( &amp;secAttr, TRUE, 0, 0 );
+ 
+             memset( &amp;startupinfo, 0, sizeof(startupinfo) );
+ 
+             sprintf(szDbgCmdLine, szDbgCmdFmt, GetCurrentProcessId(), hEvent);
+ 
+             startupinfo.cb = sizeof(startupinfo);
+             startupinfo.lpDesktop = "Winsta0\Default"
+ 
+             CsrIdentifyAlertableThread();   // ???
+ 
+             retValue = CreateProcessA(
+                             0,              // lpApplicationName
+                             szDbgCmdLine,   // Command line
+                             0, 0,           // process, thread security attrs
+                             1,              // bInheritHandles
+                             0, 0,           // creation flags, environment
+                             0,              // current directory.
+                             &amp;statupinfo,    // STARTUPINFO
+                             &amp;pi );          // PROCESS_INFORMATION
+ 
+             if ( retValue &amp;&amp; hEvent )
+             {
+                 NtWaitForSingleObject( hEvent, 1, 0 );
+                 return EXCEPTION_CONTINUE_SEARCH;
+             }
+         }
+ 
+         if ( _BasepAlreadyHadHardError )
+             NtTerminateProcess(GetCurrentProcess(), pExcptRec-&gt;ExceptionCode);
+     }
+ 
+     return EXCEPTION_EXECUTE_HANDLER;
+ }
+ 
+ LPTOP_LEVEL_EXCEPTION_FILTER
+ SetUnhandledExceptionFilter(
+     LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter );   
+ { 
+     // _BasepCurrentTopLevelFilter is a KERNEL32.DLL global var
+     LPTOP_LEVEL_EXCEPTION_FILTER previous= _BasepCurrentTopLevelFilter;
+ 
+     // Set the new value
+     _BasepCurrentTopLevelFilter = lpTopLevelExceptionFilter;
+ 
+     return previous;    // return the old value
+ }
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig14">Figure 14</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">KiUserExceptionDispatcher Pseudocode</font></b>
+</p><p>
+</p><pre><font size="1">
+ KiUserExceptionDispatcher( PEXCEPTION_RECORD pExcptRec, CONTEXT * pContext )
+ {
+     DWORD retValue;
+ 
+     // Note: If the exception is handled, RtlDispatchException() never returns
+     if ( RtlDispatchException( pExceptRec, pContext ) )
+         retValue = NtContinue( pContext, 0 );
+     else
+         retValue = NtRaiseException( pExceptRec, pContext, 0 );
+ 
+     EXCEPTION_RECORD excptRec2;
+ 
+     excptRec2.ExceptionCode = retValue;
+     excptRec2.ExceptionFlags = EXCEPTION_NONCONTINUABLE;
+     excptRec2.ExceptionRecord = pExcptRec;
+     excptRec2.NumberParameters = 0;
+ 
+     RtlRaiseException( &amp;excptRec2 );
+ }
+ 
+ int RtlDispatchException( PEXCEPTION_RECORD pExcptRec, CONTEXT * pContext )
+ {
+     DWORD   stackUserBase;
+     DWORD   stackUserTop;
+     PEXCEPTION_REGISTRATION pRegistrationFrame;
+     DWORD hLog;
+ 
+     // Get stack boundaries from FS:[4] and FS:[8]
+     RtlpGetStackLimits( &amp;stackUserBase, &amp;stackUserTop );
+ 
+     pRegistrationFrame = RtlpGetRegistrationHead();
+ 
+     while ( -1 != pRegistrationFrame )
+     {
+         PVOID justPastRegistrationFrame = &amp;pRegistrationFrame + 8;
+         if ( stackUserBase &gt; justPastRegistrationFrame )
+         {
+             pExcptRec-&gt;ExceptionFlags |= EH_STACK_INVALID;
+             return DISPOSITION_DISMISS; // 0
+         }
+ 
+         if ( stackUsertop &lt; justPastRegistrationFrame )
+         {
+             pExcptRec-&gt;ExceptionFlags |= EH_STACK_INVALID;
+             return DISPOSITION_DISMISS; // 0
+         }
+ 
+         if ( pRegistrationFrame &amp; 3 )   // Make sure stack is DWORD aligned
+         {
+             pExcptRec-&gt;ExceptionFlags |= EH_STACK_INVALID;
+             return DISPOSITION_DISMISS; // 0
+         }
+ 
+         if ( someProcessFlag )
+         {
+             // Doesn't seem to do a whole heck of a lot.
+             hLog = RtlpLogExceptionHandler( pExcptRec, pContext, 0,
+                                             pRegistrationFrame, 0x10 );
+         }
+ 
+         DWORD retValue, dispatcherContext;
+ 
+         retValue= RtlpExecuteHandlerForException(pExcptRec, pRegistrationFrame,
+                                                  pContext, &amp;dispatcherContext,
+                                                  pRegistrationFrame-&gt;handler );
+ 
+         // Doesn't seem to do a whole heck of a lot.
+         if ( someProcessFlag )
+             RtlpLogLastExceptionDisposition( hLog, retValue );
+ 
+         if ( 0 == pRegistrationFrame )
+         {
+             pExcptRec-&gt;ExceptionFlags &amp;= ~EH_NESTED_CALL;   // Turn off flag
+         }
+ 
+         EXCEPTION_RECORD excptRec2;
+ 
+         DWORD yetAnotherValue = 0;
+ 
+         if ( DISPOSITION_DISMISS == retValue )
+         {
+             if ( pExcptRec-&gt;ExceptionFlags &amp; EH_NONCONTINUABLE )
+             {
+                 excptRec2.ExceptionRecord = pExcptRec;
+                 excptRec2.ExceptionNumber = STATUS_NONCONTINUABLE_EXCEPTION;
+                 excptRec2.ExceptionFlags = EH_NONCONTINUABLE;
+                 excptRec2.NumberParameters = 0
+                 RtlRaiseException( &amp;excptRec2 );
+             }
+             else
+                 return DISPOSITION_CONTINUE_SEARCH;
+         }
+         else if ( DISPOSITION_CONTINUE_SEARCH == retValue )
+         {
+         }
+         else if ( DISPOSITION_NESTED_EXCEPTION == retValue )
+         {
+             pExcptRec-&gt;ExceptionFlags |= EH_EXIT_UNWIND;
+             if ( dispatcherContext &gt; yetAnotherValue )
+                 yetAnotherValue = dispatcherContext;
+         }
+         else    // DISPOSITION_COLLIDED_UNWIND
+         {
+             excptRec2.ExceptionRecord = pExcptRec;
+             excptRec2.ExceptionNumber = STATUS_INVALID_DISPOSITION;
+             excptRec2.ExceptionFlags = EH_NONCONTINUABLE;
+             excptRec2.NumberParameters = 0
+             RtlRaiseException( &amp;excptRec2 );
+         }
+ 
+         pRegistrationFrame = pRegistrationFrame-&gt;prev;  // Go to previous frame
+     }
+ 
+     return DISPOSITION_DISMISS;
+ }
+ 
+ 
+ _RtlpExecuteHandlerForException:    // Handles exception (first time through)
+     MOV     EDX,XXXXXXXX
+     JMP     ExecuteHandler
+ 
+ 
+ RtlpExecutehandlerForUnwind:        // Handles unwind (second time through)
+     MOV     EDX,XXXXXXXX
+ 
+ 
+ 
+ int ExecuteHandler( PEXCEPTION_RECORD pExcptRec
+                     PEXCEPTION_REGISTRATION pExcptReg
+                     CONTEXT * pContext
+                     PVOID pDispatcherContext,
+                     FARPROC handler ) // Really a ptr to an _except_handler()
+ 
+     // Set up an EXCEPTION_REGISTRATION, where EDX points to the
+     // appropriate handler code shown below
+     PUSH    EDX
+     PUSH    FS:[0]
+     MOV     FS:[0],ESP
+ 
+     // Invoke the exception callback function
+     EAX = handler( pExcptRec, pExcptReg, pContext, pDispatcherContext );
+ 
+     // Remove the minimal EXCEPTION_REGISTRATION frame 
+     MOV     ESP,DWORD PTR FS:[00000000]
+     POP     DWORD PTR FS:[00000000]
+ 
+     return EAX;
+ }
+ 
+ Exception handler used for _RtlpExecuteHandlerForException:
+ {
+     // If unwind flag set, return DISPOSITION_CONTINUE_SEARCH, else
+     // assign pDispatcher context and return DISPOSITION_NESTED_EXCEPTION
+ 
+     return pExcptRec-&gt;ExceptionFlags &amp; EXCEPTION_UNWIND_CONTEXT
+                 ? DISPOSITION_CONTINUE_SEARCH 
+                 : *pDispatcherContext = pRegistrationFrame-&gt;scopetable,
+                   DISPOSITION_NESTED_EXCEPTION;
+ }
+ 
+ Exception handler used for _RtlpExecuteHandlerForUnwind:
+ {
+     // If unwind flag set, return DISPOSITION_CONTINUE_SEARCH, else
+     // assign pDispatcher context and return DISPOSITION_COLLIDED_UNWIND
+ 
+     return pExcptRec-&gt;ExceptionFlags &amp; EXCEPTION_UNWIND_CONTEXT
+                 ? DISPOSITION_CONTINUE_SEARCH 
+                 : *pDispatcherContext = pRegistrationFrame-&gt;scopetable,
+                   DISPOSITION_COLLIDED_UNWIND;
+ }
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+
+<p>
+<b>
+<font color="#800000" face="verdana, arial, helv" size="4"><a name="fig15">Figure 15</a></font>
+<font color="#FFFFFF" face="verdana, arial, helv" size="4">&nbsp;</font>
+<font color="#000080" face="verdana, arial, helv" size="4">Who Calls Who in SEH</font></b>
+</p><p>
+</p><pre><font size="1">
+ KiUserExceptionDispatcher()
+ 
+     RtlDispatchException()
+ 
+         RtlpExecuteHandlerForException()
+ 
+             ExecuteHandler() // Normally goes to __except_handler3
+ 
+ ---------
+ 
+ __except_handler3()
+ 
+     scopetable filter-expression()
+ 
+     __global_unwind2()
+ 
+         RtlUnwind()
+ 
+             RtlpExecuteHandlerForUnwind()
+ 
+     scopetable __except block()
+</font></pre>
+
+<hr align="left" color="000080" width="200">
+
+</body></html>
