@@ -1,0 +1,551 @@
+
+<!-- saved from url=(0042)http://www.dumpanalysis.org/CDAPoster.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Crash Dump Analysis Poster v3.0 (HTML version)</title>
+<link rel="SHORTCUT ICON" href="http://www.dumpanalysis.org/flavicon.ico">
+<style type="text/css"></style></head>
+<body bgcolor="#0000FF" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" text="#FFFFFF">
+<h2>Crash Dump Analysis Poster v3.0 (HTML version)</h2>
+<table>
+<tbody>
+   <tr>
+      <td width="50%">
+	 <b>--- Common commands for all dumps ---</b> 
+      </td>
+      <td width="50%">
+         <b>--- Common commands for all dumps ---</b>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542790.aspx">
+	    d{d|q|p}{s|p|a|u} [/c Width] [/p | /pc | /puc | /pwc] [Range]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564805.aspx">
+	    .reload [<em>ReloadOptions</em>] [Module [= Address [, Size [, Timestamp]]]]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff562949.aspx">
+	    .effmach [. | # | x86 | amd64 | ia64 | ebc]
+	 </a>
+      </td>
+      <td width="50%">
+         <em>ReloadOptions := [/d] [/f] [/i] [/l] [/n] [/o] [/s] [/u] [/unl] [/user] [/v] [/w]</em>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff560235.aspx">
+	    u[b] [Range | Address]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563155.aspx">
+	    .frame [/r] [FrameNumber]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff558942.aspx">
+	    uf [/m] [/o] Address
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563155.aspx">
+	    .frame [/r] = BasePtr [FrameIncrement]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff561506.aspx">
+	    x [[/t] [/v] [/s Size] [/q] [/p] [/a | /A | /n | /N | /z | /Z]] Module!Symbol
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563155.aspx">
+	    .frame [/r] = BasePtr StackPtr InstructionPtr
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff561506.aspx">
+	    x [[/t] [/v] [/s Size] [/q] [/p] [/a | /A | /n | /N | /z | /Z]] *
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542786.aspx">
+	    dv [[/i] [/t] [/v] [/V] [/a | /A | /n | /N | /z | /Z]] [Pattern]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563954.aspx">
+	    !list -t [Module!]Type.Field -x "Commands" [-a "Arguments"] [Options] StartAddress
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563954.aspx">
+	    !list " -t [Module!]Type.Field -x \"Commands\" [-a \"Arguments\"] [Options] StartAddress "
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff552029.aspx">
+	    ln Address
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563954.aspx">
+	    !list -h 
+	 </a>
+      </td>
+   </tr> 
+    
+      <tr><td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff562112.aspx">
+	    !analyze -c [-load KnownIssuesFile | -unload | -help]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff562112.aspx">
+	    !analyze [-v] [-f | -hang] [-D BucketID]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+	 <b>--- User dumps ---</b>
+      </td>
+      <td width="50%">
+	 <b>--- Kernel/Complete memory dumps ---</b>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542790.aspx">
+	   d{a|b|c|d|D|f|p|q|u|w|W} [/c Width] [Range]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff562112.aspx">
+            !analyze -show BugCheckCode [BugParameters]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542790.aspx">
+	   dy{b|d} [/c Width] [Range]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563980.aspx">
+            !locks [-v] [-p] [-d] </a><address of="" eresource=""><a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563980.aspx">
+	 </a>
+      </address></td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542790.aspx">
+	   d [/c Width] [Range]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff562294(v=VS.85).aspx">
+            !cs [-l] [-o] [-s]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542772.aspx">
+	   dt [<em>DisplayOptions</em>] [[-n] [-y]] [module!]NAME [[[-n] [-y]] Field] [Address] [-l List]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564670.aspx">
+            !peb [Address]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542772.aspx">
+	    dt [<em>DisplayOptions</em>] Address [-l List] 								
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff565433.aspx">
+            !teb [Address]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542772.aspx">
+	    dt -h
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff552026.aspx">
+            lm [olvecifnpt] [1m] [u | k] [a Address] [m Pattern | M Pattern]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+	 <em>DisplayOptions := [-a[quantity]] [-b] [-c] [-e] [-i] [-o] [-p] [-r[depth]] [-s size] [-v]</em>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542790.aspx">
+            d{a|b|c|d|D|f|p|q|u|w|W} [/c Width] [/p | /pc | /puc | /pwc] [Range]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff562294(v=VS.85).aspx">
+            !cs [-l] [-o] [-s]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542790.aspx">
+	    dy{b|d} [/c Width] [/p | /pc | /puc | /pwc] [Range]
+	 </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff552026.aspx">
+            lm [olvecifnpt] [1m] [a Address] [m Pattern | M Pattern]
+	 </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542790.aspx">
+            d [/c Width] [/p | /pc | /puc | /pwc] [Range]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         ~*kv /&nbsp; 
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff565548.aspx">
+            !uniqstack [ -b | -v | -p ] [ -n ]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542772.aspx">
+            [Processor] dt [<em>DisplayOptions</em>] [[-n] [-y]] [module!]NAME [[[-n] [-y]] Field] [Address] [-l List]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff554663.aspx">
+	    [~Thread] r[M Mask|F|X|?] [ Register[:[Num]Type] [= [Value]] ]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542772.aspx">
+	    dt [<em>DisplayOptions</em>] Address [-l List]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff551943.aspx">
+	    [~Thread] k[b|p|P|v] [n] [f] [L] [FrameCount]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff542772.aspx">
+	    dt -h
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff551943.aspx">
+            [~Thread] k[b|p|P|v] [n] [f] [L] = BasePtr [FrameCount]
+         </a>
+      </td>
+      <td width="50%">
+            <em>DisplayOptions := [-a[quantity]] [-b] [-c] [-e] [-i] [-o] [-p] [-r[depth]] [-s size] [-v]</em>      
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff551943.aspx">
+            [~Thread] k[b|p|P|v] [n] [f] [L] = BasePtr StackPtr InstructionPtr
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff565602.aspx">
+            !vm [0-0x3F]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff551943.aspx">
+            [~Thread] kd [WordCount]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563817.aspx">
+            !irpfind [-v] [0-4 [RestartAddress [arg|device|fileobject|mdlprocess|thread|userevent Data]]]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564670.aspx">
+            !peb [Address]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563037.aspx">
+            !exqueue [0-0xF | 0x10 | 0x20 | 0x40]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff565433.aspx">
+            !teb [Address]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564700.aspx">
+            !poolused [0-1[0x2 | 0x4 | 0x8]]  [TagString]]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563176.aspx">
+            !gflag -?
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff565379.aspx">
+            !stacks [0-2 [FilterString]]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563176.aspx">
+            !gflag
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564024.aspx">
+            !lpc message MessageID
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap [<em>HeapOptions</em>] [<em>ValidationOptions</em>] [Heap]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564024.aspx">
+            !lpc port Port
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+          <em>HeapOptions := [-v] [-a] [-h] [-f] [-m] [-t] [-T] [-g] [-s] [-k] [-c]</em>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564024.aspx">
+            !lpc scan Port 
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+          <em>ValidationOptions := -C | -D | -E | -d | -e</em>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564024.aspx">
+            !lpc thread Thread 
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -b [{alloc|realloc|free} [Tag]] [Heap | BreakAddress]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564024.aspx">
+            !lpc PoolSearch
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -B {alloc|realloc|free} [Heap | BreakAddress]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564024.aspx">
+            !lpc
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -l
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff565420.aspx">
+            ~&lt;p&gt;s
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -s [<em>SummaryOptions</em>] [StatHeapAddress]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff554663.aspx">
+            [Processor] r[M Mask|F|X|?] [ Register[:[Num]Type] [= [Value]]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+          <em>SummaryOptions := [-v] [-b BucketSize] [-d DumpBlockSize] [-a] [-c]</em> 
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff551943.aspx">
+            [Processor] k[b|p|P|v] [n] [f] [L] [FrameCount]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -i HeapAddress
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff551943.aspx">
+            [Processor] k[b|p|P|v] [n] [f] [L] = BasePtr [FrameCount]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -x [-v] Address
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff551943.aspx">
+            [Processor] k[b|p|P|v] [n] [f] [L] = BasePtr StackPtr InstructionPtr
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -p [<em>PageHeapOptions</em>]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff551943.aspx">
+            [Processor] kd [WordCount]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+          <em>PageHeapOptions := -h Handle | -a Address | -t[c|s] [Traces] | -t[c|s] [Traces] | -all | -?</em>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564723.aspx">
+            .process [/p] [/r] [Process]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -srch [-b | -w | -d | -q] Pattern
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564717.aspx">
+            !process [/s Session] [/m Module] [Process [0-0x3F]]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -flt {s Size | r SizeMin SizeMax}
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff564717.aspx">
+            !process [/s Session] [/m Module] 0 Flags ImageName
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap -stat [-h Handle [-grp {A | B | S} [MaxDisplay]]]
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff565440.aspx">
+            !thread [-p] [-t] [Address [0-0x3F]]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff563189.aspx">
+            !heap [-p] -?
+         </a>
+      </td>
+      <td width="50%">
+         <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ff565449.aspx">
+            .thread [Thread]
+         </a>
+      </td>
+   </tr> 
+   <tr>
+     <td align="center" width="100%" colspan="2">
+	<br>Designed by Dmitry Vostokov (<a href="http://www.dumpanalysis.org/">http://www.dumpanalysis.org</a>)
+     </td>
+   </tr>
+</tbody>
+</table>
+
+
+</body></html>
