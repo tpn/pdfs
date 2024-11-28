@@ -1,6 +1,17 @@
-A veritable mish-mash of technically-oriented PDFs I've collected over the
-years.  All content copyright the respective author(s).
+All PDFs are present in the [PDF folder](./PDFs). Files have spaces in names and if you need to replace all spaces with underscores for better command line processing, run the Python script [rename.py](./rename.py) or the Bash script [rename.sh](./rename.sh).
 
-(Note: I make a concerted effort to not publish anything here if the copyright
- does not permit it.  If I've missed something, submit a pull request with
- the offending document removed.)
+Usage:
+Using BASH script
+
+Open terminal and enter following commands:
+```sh
+# Make the bash script executable and execute from the root directory of the repository.
+chmod +x rename.sh
+./rename.sh
+```
+Using Python script
+
+Open terminal and enter following commands from root directory:
+```sh
+python rename.py
+```
