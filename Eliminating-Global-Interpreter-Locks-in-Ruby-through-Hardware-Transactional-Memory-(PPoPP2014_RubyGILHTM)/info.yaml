@@ -1,0 +1,3 @@
+title: Eliminating Global Interpreter Locks in Ruby through Hardware Transactional Memory (PPoPP2014_RubyGILHTM)
+files:
+- Eliminating-Global-Interpreter-Locks-in-Ruby-through-Hardware-Transactional-Memory-(PPoPP2014_RubyGILHTM).pdf
